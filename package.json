@@ -8,7 +8,7 @@
     "devStart": "nodemon index.js",
     "lint": "eslint .",
     "fix": "npm run lint -- --fix",
-    "test": "mocha ./test/**/*.spec.js"
+    "test": "mocha \"test/**/*.spec.js\""
   },
   "keywords": [
     "stremio",
@@ -21,6 +21,8 @@
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "fastest-levenshtein": "^1.0.12",
+    "fs": "^0.0.1-security",
+    "https": "^1.0.0",
     "superagent": "^9.0.2",
     "unzipper": "^0.10.11",
     "winston": "^3.13.0"

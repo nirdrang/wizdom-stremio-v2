@@ -21,12 +21,16 @@ const extractExtraArgs = (query) => {
   return extraArgs;
 };
 
+const getExitHandler = (res) =>
+  res.locals?.exitWithEmptyResponse || exitEarlyWithEmptySubtitlesArray;
+
 function extractTitle(req, res, next) {
   const type = req.params.type;
   const [imdbID, season, episode] = deconstructImdbId(req.params.imdbId);
 
   if (!VALID_IMDB_ID.test(imdbID)) {
-    exitEarlyWithEmptySubtitlesArray(res);
+    const exitEarly = getExitHandler(res);
+    exitEarly(res);
     logger.debug('Invalid imdb ID', { imdbID });
     return;
   }
@@ -34,6 +38,7 @@ function extractTitle(req, res, next) {
   const extraArgs = extractExtraArgs(req.params?.query);
 
   req.title = { type, imdbID, season, episode, ...extraArgs };
+  req.title.rawQuery = req.params?.query;
 
   next();
 }

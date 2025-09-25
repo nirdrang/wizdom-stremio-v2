@@ -1,6 +1,14 @@
 {
   "srtUnzipperRoute": "/srt/",
-  "port": 7001,
-  "hostname": "http://127.0.0.1",
-  "isProduction": false
+  "port": 8080,
+  "hostname": "auto",
+  "isProduction": false,
+  "torrentio": {
+    "baseUrl": "https://torrentio.strem.fun",
+    "timeout": 10000
+  },
+  "filtering": {
+    "primaryLanguage": "hebrew",
+    "hebrewOnly": true
+  }
 }

@@ -3,14 +3,14 @@
  */
 
 module.exports = {
-  id: 'xyz.stremio.wizdom',
+  id: 'xyz.stremio.wizdom.hebrew-english-filter',
   contactEmail: 'maor@magori.online',
   version: process.env.npm_package_version,
   catalogs: [],
-  resources: ['subtitles'],
+  resources: ['stream'],
   types: ['movie', 'series'],
-  name: 'Wizdom Subtitles',
+  name: 'Hebrew Subtitle Stream Enhancer',
   description:
-    'An unofficial Stremio addon for Hebrew subtitles from wizdom.xyz. Developed by Maor Development',
+    'Shows ALL Torrentio streams with [HEB] prefix for Hebrew subtitle availability. Hebrew-enabled streams listed first by best match quality.',
   logo: 'https://i.ibb.co/KLYK0TH/wizdon256.png',
 };

@@ -4,7 +4,7 @@ module.exports = {
   id: 'xyz.stremio.wizdom',
   contactEmail: 'maor@magori.online',
   catalogs: [],
-  resources: ['subtitles'],
+  resources: ['stream', 'subtitles'],
   types: ['movie', 'series'],
   name: 'Wizdom Subtitles',
   description:
