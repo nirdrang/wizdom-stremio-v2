@@ -65,7 +65,27 @@ const enhanceStreamsBySubs = (req, res, next) => {
       const streamName = stream.title || stream.name || 'Unknown';
       const hasHebrew = Number.isFinite(score) && score <= MATCH_THRESHOLD_RATIO;
       
-      logger.debug(`   📊 "${streamName}" → Score: ${score === NO_MATCH_SCORE ? 'NO_MATCH' : score.toFixed(3)} ${hasHebrew ? '✅ HEB' : ''}`);
+      // Extract seeders for logging
+      const seeders = (() => {
+        const title = stream.title || stream.name || '';
+        const patterns = [
+          /\[S:(\d+)/i,           // [S:42 L:5]
+          /\[(\d+)\/\d+\]/,       // [42/5]
+          /\((\d+)\/\d+\)/,       // (42/5)
+          /👤(\d+)/,              // 👤42
+          /S:(\d+)/i              // S:42
+        ];
+        
+        for (const pattern of patterns) {
+          const match = title.match(pattern);
+          if (match) {
+            return parseInt(match[1], 10);
+          }
+        }
+        return 0;
+      })();
+      
+      logger.debug(`   📊 "${streamName}" → Score: ${score === NO_MATCH_SCORE ? 'NO_MATCH' : score.toFixed(3)} | Seeders: ${seeders} ${hasHebrew ? '✅ HEB' : ''}`);
       
       if (hasHebrew) {
         hebrewScoredStreams.push({
@@ -93,6 +113,29 @@ const enhanceStreamsBySubs = (req, res, next) => {
     }));
   }
 
+  // Function to extract seeders from stream title
+  const extractSeeders = (stream) => {
+    const title = stream.title || stream.name || '';
+    
+    // Try to extract seeders from common patterns like [S:42 L:5], [42/5], (42/5), etc.
+    const patterns = [
+      /\[S:(\d+)/i,           // [S:42 L:5]
+      /\[(\d+)\/\d+\]/,       // [42/5]
+      /\((\d+)\/\d+\)/,       // (42/5)
+      /👤(\d+)/,              // 👤42
+      /S:(\d+)/i              // S:42
+    ];
+    
+    for (const pattern of patterns) {
+      const match = title.match(pattern);
+      if (match) {
+        return parseInt(match[1], 10);
+      }
+    }
+    
+    return 0; // Default to 0 if no seeders found
+  };
+
   // Combine and sort: Hebrew streams first (by best score), then non-Hebrew streams
   const allStreams = [...hebrewScoredStreams, ...nonHebrewStreams];
   
@@ -102,11 +145,29 @@ const enhanceStreamsBySubs = (req, res, next) => {
       if (first.hasHebrew !== second.hasHebrew) {
         return first.hasHebrew ? -1 : 1;
       }
-      // Within same type, sort by score (lower = better for Hebrew, maintain original order for non-Hebrew)
+      
+      // Within same type, sort by score (lower = better for Hebrew)
       if (first.hasHebrew && second.hasHebrew) {
-        return first.score - second.score;
+        // Primary sort: by subtitle score (lower is better)
+        const scoreDiff = first.score - second.score;
+        if (scoreDiff !== 0) {
+          return scoreDiff;
+        }
+        
+        // Secondary sort: by seeders (higher is better) when scores are equal
+        const firstSeeders = extractSeeders(first.stream);
+        const secondSeeders = extractSeeders(second.stream);
+        return secondSeeders - firstSeeders;
       }
-      return 0; // Keep original order for non-Hebrew streams
+      
+      // For non-Hebrew streams, sort by seeders only
+      if (!first.hasHebrew && !second.hasHebrew) {
+        const firstSeeders = extractSeeders(first.stream);
+        const secondSeeders = extractSeeders(second.stream);
+        return secondSeeders - firstSeeders;
+      }
+      
+      return 0; // Fallback
     })
     .map(({ stream, hasHebrew }) => {
       // Add [HEB] prefix only to streams with Hebrew subtitles
