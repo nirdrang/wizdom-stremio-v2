@@ -1,0 +1,44 @@
+{
+  "name": "wizdom-stremio-express",
+  "version": "2.6.2",
+  "description": "Stremio addon for Hebrew subtitles from wizdom.xyz using express this time",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "devStart": "nodemon index.js",
+    "lint": "eslint .",
+    "fix": "npm run lint -- --fix",
+    "test": "mocha \"test/**/*.spec.js\""
+  },
+  "keywords": [
+    "stremio",
+    "wizdom"
+  ],
+  "author": "Maor Development",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "config": "^3.3.12",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "fastest-levenshtein": "^1.0.12",
+    "fs": "^0.0.1-security",
+    "https": "^1.0.0",
+    "superagent": "^9.0.2",
+    "unzipper": "^0.10.11",
+    "winston": "^3.13.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-unicorn": "^53.0.0",
+    "mocha": "^10.4.0",
+    "nock": "^13.5.4",
+    "nodemon": "^2.0.16",
+    "prettier": "^3.2.5",
+    "supertest": "^7.0.0"
+  }
+}
