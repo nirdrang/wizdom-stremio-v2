@@ -46,6 +46,17 @@ const HOSTNAME = HOSTNAME_CONFIG === 'auto' ? `https://${NETWORK_IP}` : HOSTNAME
 // Check if running in production
 const isProduction = config.get('isProduction');
 
+// Use HTTP server (SSL termination handled by platform in production)
+http.createServer(addon).listen(PORT, '0.0.0.0', function () {
+  logger.debug(`Is production: ${isProduction}`);
+  logger.info(`🌐 Network IP detected: ${NETWORK_IP}`);
+  logger.info(`🌐 HTTP Server started`);
+  logger.info(`🚀 Add-on Repository URL: ${HOSTNAME}/manifest.json`);
+  logger.info(`📱 Server running at: ${HOSTNAME}`);
+});
+
+// Commented out local HTTPS for now - use HTTP in all environments
+/*
 if (isProduction) {
   // Production: Use HTTP (SSL termination handled by platform)
   http.createServer(addon).listen(PORT, '0.0.0.0', function () {
@@ -70,3 +81,4 @@ if (isProduction) {
     logger.info(`📱 Accessible from network devices at: ${HOSTNAME}:${PORT}`);
   });
 }
+*/
