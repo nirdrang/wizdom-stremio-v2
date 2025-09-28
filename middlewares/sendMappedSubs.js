@@ -19,6 +19,17 @@ const mapToStremioSubs = (req, res) => {
     id: `[WIZDOM]${sub.versioname}`,
   }));
 
+  // Log final ordered subtitles list as it will appear in Stremio UI
+  const logger = require('../common/logger');
+  logger.info(`📝 STREMIO UI SUBTITLES ORDER (${subtitles?.length || 0} subtitles):`);
+  if (subtitles && subtitles.length > 0) {
+    subtitles.forEach((sub, index) => {
+      logger.info(`   ${index + 1}. 🇮🇱 "${sub.id}" → ${sub.url}`);
+    });
+  } else {
+    logger.info(`   No Hebrew subtitles available`);
+  }
+
   res.json({ subtitles: subtitles || [] });
 };
 

@@ -169,14 +169,21 @@ const enhanceStreamsBySubs = (req, res, next) => {
       
       return 0; // Fallback
     })
-    .map(({ stream, hasHebrew }) => {
+    .map(({ stream, hasHebrew, score }) => {
       // Add [HEB] prefix only to streams with Hebrew subtitles
       if (hasHebrew) {
         const modifiedStream = { ...stream };
         modifiedStream.title = `🇮🇱 [HEB] ${stream.title || stream.name || 'Unknown'}`;
+        // Preserve scoring information for logging
+        modifiedStream._hebrewScore = score;
+        modifiedStream._hasHebrew = true;
         return modifiedStream;
       }
-      return stream; // Return original stream unchanged
+      // Preserve scoring information for non-Hebrew streams too
+      const modifiedStream = { ...stream };
+      modifiedStream._hebrewScore = Infinity;
+      modifiedStream._hasHebrew = false;
+      return modifiedStream;
     });
 
   const hebrewCount = hebrewScoredStreams.length;
@@ -184,13 +191,20 @@ const enhanceStreamsBySubs = (req, res, next) => {
   
   logger.info(`🎯 ENHANCED RESULTS: ${totalCount} total streams (${hebrewCount} with Hebrew subtitles, ${totalCount - hebrewCount} without)`);
   
-  if (hebrewCount > 0) {
-    logger.info(`🏆 TOP HEBREW MATCHES:`);
-    hebrewScoredStreams.slice(0, 5).forEach(({stream, score}, index) => {
-      const streamName = stream.title || stream.name || 'Unknown';
-      logger.info(`   ${index + 1}. 🇮🇱 "${streamName}" (score: ${score.toFixed(3)})`);
-    });
-  }
+  // Log final ordered list as it will appear in Stremio UI with scoring details
+  logger.info(`📺 STREMIO UI ORDER (${req.filteredStreams.length} streams):`);
+  req.filteredStreams.forEach((stream, index) => {
+    const streamTitle = stream.title || stream.name || 'Unknown';
+    const seeders = extractSeeders(stream);
+    const hasHebFlag = streamTitle.includes('🇮🇱 [HEB]') ? '🇮🇱' : '🌐';
+    
+    // Use preserved scoring information
+    const scoreInfo = stream._hasHebrew ? 
+      `(score: ${stream._hebrewScore.toFixed(3)})` : 
+      '(no Hebrew match)';
+    
+    logger.info(`   ${index + 1}. ${hasHebFlag} "${streamTitle}" ${scoreInfo} ${seeders > 0 ? `(👤${seeders})` : ''}`);
+  });
 
   next();
 };

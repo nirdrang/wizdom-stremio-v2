@@ -2,6 +2,7 @@
 *.pem
 *.key
 *.crt
+mkcert.exe
 
 # Node modules
 node_modules/
