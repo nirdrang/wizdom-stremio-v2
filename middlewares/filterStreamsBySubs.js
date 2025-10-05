@@ -38,6 +38,14 @@ const getBestScoreForStream = (stream, subtitles) => {
   }, NO_MATCH_SCORE);
 };
 
+
+const formatMatchScore = (score) => {
+  if (!Number.isFinite(score)) {
+    return null;
+  }
+
+  return score.toFixed(3);
+};
 // Pattern matching removed - rely only on OpenSubtitles API for accuracy
 
 const enhanceStreamsBySubs = (req, res, next) => {
@@ -173,7 +181,10 @@ const enhanceStreamsBySubs = (req, res, next) => {
       // Add [HEB] prefix only to streams with Hebrew subtitles
       if (hasHebrew) {
         const modifiedStream = { ...stream };
-        modifiedStream.title = `🇮🇱 [HEB] ${stream.title || stream.name || 'Unknown'}`;
+        const formattedScore = formatMatchScore(score);
+        const scoreLabel = formattedScore ? ` | score:${formattedScore}` : '';
+        const baseTitle = stream.title || stream.name || 'Unknown';
+        modifiedStream.title = `🇮🇱 [HEB${scoreLabel}] ${baseTitle}`;
         // Preserve scoring information for logging
         modifiedStream._hebrewScore = score;
         modifiedStream._hasHebrew = true;

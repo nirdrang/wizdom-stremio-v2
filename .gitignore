@@ -27,3 +27,6 @@ npm-debug.log*
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# TorrServer directory (should not be committed)
+TorrServer/
