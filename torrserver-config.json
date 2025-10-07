@@ -1,0 +1,17 @@
+{
+  "CacheSize": 100,
+  "ReaderReadAHead": 5,
+  "PreloadBuffer": 10,
+  "ConnectionsLimit": 50,
+  "DhtConnectionLimit": 500,
+  "UploadRateLimit": 0,
+  "DownloadRateLimit": 0,
+  "PeersListenPort": 6881,
+  "EnableIPv6": true,
+  "DisableTCP": false,
+  "DisableUTP": false,
+  "EnableDHT": true,
+  "EnableUpload": true,
+  "EnableDebug": false,
+  "TorrentDisconnectTimeout": 60
+}

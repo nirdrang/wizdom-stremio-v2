@@ -46,6 +46,21 @@ const formatMatchScore = (score) => {
 
   return score.toFixed(3);
 };
+
+// Extract quality from stream title/name (2160p > 1080p > 720p > 480p)
+const extractQuality = (stream) => {
+  const title = stream.title || stream.name || '';
+  
+  // Quality priority (higher number = better quality)
+  if (title.match(/2160p|4k/i)) return 2160;
+  if (title.match(/1080p/i)) return 1080;
+  if (title.match(/720p/i)) return 720;
+  if (title.match(/480p/i)) return 480;
+  if (title.match(/360p/i)) return 360;
+  
+  return 0; // Unknown quality
+};
+
 // Pattern matching removed - rely only on OpenSubtitles API for accuracy
 
 const enhanceStreamsBySubs = (req, res, next) => {
@@ -154,25 +169,26 @@ const enhanceStreamsBySubs = (req, res, next) => {
         return first.hasHebrew ? -1 : 1;
       }
       
-      // Within same type, sort by score (lower = better for Hebrew)
+      // Within same type, sort by quality first, then subtitle score
       if (first.hasHebrew && second.hasHebrew) {
-        // Primary sort: by subtitle score (lower is better)
-        const scoreDiff = first.score - second.score;
-        if (scoreDiff !== 0) {
-          return scoreDiff;
+        // Primary sort: by quality (higher is better)
+        const firstQuality = extractQuality(first.stream);
+        const secondQuality = extractQuality(second.stream);
+        const qualityDiff = secondQuality - firstQuality;
+        if (qualityDiff !== 0) {
+          return qualityDiff;
         }
         
-        // Secondary sort: by seeders (higher is better) when scores are equal
-        const firstSeeders = extractSeeders(first.stream);
-        const secondSeeders = extractSeeders(second.stream);
-        return secondSeeders - firstSeeders;
+        // Secondary sort: by subtitle score (lower is better)
+        const scoreDiff = first.score - second.score;
+        return scoreDiff;
       }
       
-      // For non-Hebrew streams, sort by seeders only
+      // For non-Hebrew streams, sort by quality only
       if (!first.hasHebrew && !second.hasHebrew) {
-        const firstSeeders = extractSeeders(first.stream);
-        const secondSeeders = extractSeeders(second.stream);
-        return secondSeeders - firstSeeders;
+        const firstQuality = extractQuality(first.stream);
+        const secondQuality = extractQuality(second.stream);
+        return secondQuality - firstQuality;
       }
       
       return 0; // Fallback
@@ -215,6 +231,11 @@ const enhanceStreamsBySubs = (req, res, next) => {
       '(no Hebrew match)';
     
     logger.info(`   ${index + 1}. ${hasHebFlag} "${streamTitle}" ${scoreInfo} ${seeders > 0 ? `(👤${seeders})` : ''}`);
+    
+    // Log the URL for each stream
+    if (stream.url) {
+      logger.info(`      🔗 ${stream.url}`);
+    }
   });
 
   next();

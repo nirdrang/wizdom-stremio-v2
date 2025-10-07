@@ -4,6 +4,13 @@ const sendFilteredStreams = (req, res) => {
     ? req.filteredStreams
     : fallbackStreams;
 
+  // Log what we're sending to Stremio
+  if (streams.length > 0) {
+    console.log('\n📤 SENDING TO STREMIO - First stream:');
+    console.log(JSON.stringify(streams[0], null, 2));
+    console.log('');
+  }
+
   res.json({ streams });
 };
 

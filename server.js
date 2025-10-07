@@ -12,6 +12,7 @@ const getEnglishSubs = require('./middlewares/getEnglishSubs');
 const enhanceStreamsBySubs = require('./middlewares/filterStreamsBySubs');
 const sendFilteredStreams = require('./middlewares/sendFilteredStreams');
 const exitEarlyWithEmptyStreams = require('./middlewares/exitEarlyStreams');
+const rewriteStreamUrls = require('./middlewares/rewriteStreamUrls');
 
 const addon = express();
 
@@ -58,6 +59,7 @@ addon.get('/stream/:type/:imdbId/:query?.json', [
   setStreamExitHandler,
   extractTitle,
   getTorrentioStreams,
+  rewriteStreamUrls,
   getWizdomSubs,
   enhanceStreamsBySubs,
   sendFilteredStreams,
