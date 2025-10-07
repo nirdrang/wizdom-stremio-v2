@@ -4,7 +4,7 @@
   "hostname": "auto",
   "isProduction": false,
   "torrentio": {
-    "baseUrl": "https://torrentio.strem.fun/realdebrid=JZEK4E2EZNIXTSYFXZQWX4YD3CGBB2TKCYZE2BFWSNJQ2JJVTDPA",
+    "baseUrl": "https://torrentio.strem.fun",
     "timeout": 10000
   },
   "torrserver": {

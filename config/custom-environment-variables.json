@@ -1,5 +1,8 @@
 {
   "port": "PORT",
+  "torrentio": {
+    "baseUrl": "TORRENTIO_BASE_URL"
+  },
   "torrserver": {
     "baseUrl": "TORRSERVER_URL",
     "enabled": "TORRSERVER_ENABLED",
