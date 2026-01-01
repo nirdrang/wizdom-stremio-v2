@@ -8,7 +8,7 @@ An unofficial Stremio addon for Hebrew subtitles from wizdom.xyz. Developed by M
 
 Currently you can get this addon in:
 
-https://4b139a4b7f94-wizdom-stremio-v2.baby-beamup.club/
+https://28aa7e9346ec-stremio-heb-enhancer-nir7.baby-beamup.club/manifest.json
 
 I've published this addon and you can now find it in the addon catalog!
 
