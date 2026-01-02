@@ -40,14 +40,30 @@ const fetchStreamsFromTorrentio = async (
 ) => {
   const url = buildStreamsUrl(type, imdbId, season, episode, rawQuery);
 
+  const startTime = Date.now();
+
   try {
     const response = await superagent.get(url).timeout(TORRENTIO_TIMEOUT);
+    const duration = Date.now() - startTime;
     const streams = response.body?.streams;
+
+    logger.info({
+      description: 'Torrentio API call completed',
+      duration: `${duration}ms`,
+      type,
+      imdbId,
+      season,
+      episode,
+      streamCount: Array.isArray(streams) ? streams.length : 0,
+    });
 
     return Array.isArray(streams) ? streams : [];
   } catch (error) {
+    const duration = Date.now() - startTime;
+
     logger.error(error, {
       description: 'Failed to fetch streams from torrentio',
+      duration: `${duration}ms`,
       type,
       imdbId,
       season,
