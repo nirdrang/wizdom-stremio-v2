@@ -9,6 +9,28 @@ const fs = require('fs');
 const PORT = config.get('port');
 const HOSTNAME_CONFIG = config.get('hostname');
 
+// Log environment variables and configuration on startup
+logger.info('🔧 ============ ENVIRONMENT & CONFIGURATION ============');
+logger.info(`📌 NODE_ENV: ${process.env.NODE_ENV || 'not set (using default)'}`);
+logger.info(`📌 PORT (env): ${process.env.PORT || 'not set'} → Resolved: ${PORT}`);
+logger.info(`📌 HOSTNAME: ${HOSTNAME_CONFIG}`);
+logger.info(`📌 IS_PRODUCTION: ${config.get('isProduction')}`);
+logger.info('');
+logger.info('🌐 Torrentio Configuration:');
+logger.info(`   TORRENTIO_BASE_URL (env): ${process.env.TORRENTIO_BASE_URL || 'not set'}`);
+logger.info(`   → Resolved: ${config.get('torrentio.baseUrl')}`);
+logger.info(`   Timeout: ${config.get('torrentio.timeout')}ms`);
+logger.info('');
+logger.info('📡 TorrServer Configuration:');
+logger.info(`   TORRSERVER_URL (env): ${process.env.TORRSERVER_URL || 'not set'}`);
+logger.info(`   → Resolved: ${config.get('torrserver.baseUrl')}`);
+logger.info(`   TORRSERVER_ENABLED (env): ${process.env.TORRSERVER_ENABLED || 'not set'}`);
+logger.info(`   → Resolved: ${config.get('torrserver.enabled')}`);
+logger.info(`   TORRSERVER_PRELOAD (env): ${process.env.TORRSERVER_PRELOAD || 'not set'}`);
+logger.info(`   → Resolved: ${config.get('torrserver.preload')}`);
+logger.info('🔧 ======================================================');
+logger.info('');
+
 // Function to get the primary network IP address
 const getNetworkIP = () => {
   const interfaces = os.networkInterfaces();
