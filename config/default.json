@@ -5,7 +5,7 @@
   "isProduction": false,
   "torrentio": {
     "baseUrl": "https://torrentio.strem.fun",
-    "timeout": 30000
+    "timeout": 60000
   },
   "torrserver": {
     "baseUrl": "http://192.168.1.89:8090",
